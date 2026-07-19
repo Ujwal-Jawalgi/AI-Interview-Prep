@@ -1,0 +1,210 @@
+# Phase 1 — Project Bootstrap & User Authentication
+
+## Overview
+
+Stand up the full Next.js 14 (App Router) project inside `e:\Placement_Prep`, wire in
+Tailwind CSS + Framer Motion, connect Clerk for authentication, scaffold the Supabase
+Postgres schema, and ship a polished **Landing Page → Sign Up / Sign In → Dashboard
+(protected)** flow. No mock-interview logic yet — just authentication and the shell.
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> **Please answer these before I start building so I don't have to interrupt mid-build.**
+
+1. **Clerk publishable/secret keys** — Do you already have a Clerk account and project?
+   If yes, please paste your `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY`.
+   If no, I'll scaffold the code with placeholder env vars and you paste them in before first run.
+
+2. **Supabase project** — Do you already have a Supabase project?
+   If yes, paste `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+   If no, I'll scaffold with placeholders and include the SQL schema to run in Supabase's SQL editor.
+
+3. **Groq API key** — Do you have one? (Only needed from Phase 4 onward, but I'll add the env slot now.)
+
+4. **Judge0 RapidAPI key** — Same as above (Phase 6), just need to reserve the env var slot.
+
+5. **Project folder name** — I'll create the Next.js app directly inside `e:\Placement_Prep`.
+   Is that correct, or do you want a sub-folder like `e:\Placement_Prep\app`?
+
+---
+
+## Proposed Changes
+
+### 1 — Next.js 14 App
+
+**Scaffold command** (run in `e:\Placement_Prep`):
+
+```
+npx create-next-app@14 . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --no-git
+```
+
+#### [NEW] Root files created by scaffold
+- `package.json`, `tsconfig.json`, `next.config.ts`, `tailwind.config.ts`, `.env.local`
+
+---
+
+### 2 — Additional Dependencies
+
+Installed in one `npm install` call:
+
+| Package | Purpose |
+|---|---|
+| `@clerk/nextjs` | Auth SDK (middleware + components) |
+| `@supabase/supabase-js` | DB client |
+| `framer-motion` | Animations |
+| `chart.js react-chartjs-2` | Charts (reserved for Phase 10) |
+| `lucide-react` | Icon set |
+| `clsx tailwind-merge` | Utility class helpers |
+
+---
+
+### 3 — Environment Variables
+
+#### [NEW] `.env.local`
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+CLERK_SECRET_KEY=sk_...
+NEXT_PUBLIC_SUPABASE_URL=https://...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+GROQ_API_KEY=gsk_...          # Phase 4
+JUDGE0_API_KEY=...             # Phase 6
+```
+
+---
+
+### 4 — Clerk Integration
+
+#### [NEW] `src/middleware.ts`
+Clerk's `clerkMiddleware()` protecting all routes under `/dashboard/**` and `/interview/**`.
+Public routes: `/`, `/sign-in`, `/sign-up`.
+
+#### [NEW] `src/app/sign-in/[[...sign-in]]/page.tsx`
+Clerk's `<SignIn />` component, centered, styled to match the design system.
+
+#### [NEW] `src/app/sign-up/[[...sign-up]]/page.tsx`
+Clerk's `<SignUp />` component, same styling.
+
+---
+
+### 5 — Supabase Schema
+
+#### SQL to run in Supabase SQL editor:
+```sql
+-- users (mirrors Clerk's user; clerk_id is the link)
+create table users (
+  id uuid primary key default gen_random_uuid(),
+  clerk_id text unique not null,
+  name text,
+  email text unique not null,
+  college text,
+  branch text,
+  created_at timestamptz default now()
+);
+
+-- resumes
+create table resumes (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id) on delete cascade,
+  file_url text,
+  ats_score int,
+  created_at timestamptz default now()
+);
+
+-- interviews
+create table interviews (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id) on delete cascade,
+  interview_type text,
+  company text,
+  difficulty text,
+  created_at timestamptz default now()
+);
+
+-- questions
+create table questions (
+  id uuid primary key default gen_random_uuid(),
+  interview_id uuid references interviews(id) on delete cascade,
+  question_text text,
+  user_answer text,
+  ai_feedback text
+);
+
+-- scores
+create table scores (
+  id uuid primary key default gen_random_uuid(),
+  interview_id uuid references interviews(id) on delete cascade,
+  communication int,
+  technical int,
+  grammar int,
+  confidence int,
+  final_score int
+);
+
+-- progress
+create table progress (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id) on delete cascade,
+  date date default current_date,
+  practice_time int,
+  interview_score int,
+  resume_score int
+);
+```
+
+---
+
+### 6 — Pages & Components (Phase 1 Scope)
+
+#### [NEW] `src/app/layout.tsx`
+Root layout with `ClerkProvider`, Google Fonts (Inter), global CSS.
+
+#### [NEW] `src/app/globals.css`
+Full design system: CSS variables for dark theme, gradient definitions, glass-morphism
+utilities, typography scale.
+
+#### [NEW] `src/app/page.tsx` — **Landing Page**
+- Animated hero: "Ace Every Interview with AI"
+- Feature cards grid (6 features: Mock Interview, Resume AI, Coding Round, Voice Interview, Company Prep, Progress Analytics)
+- CTA buttons → Sign Up / Sign In
+- Floating animated background blobs (Framer Motion)
+- Responsive Navbar with logo + auth buttons
+
+#### [NEW] `src/app/dashboard/page.tsx` — **Dashboard shell** (protected)
+- Clerk-protected via middleware
+- Greeting card with user name
+- Placeholder module tiles for all 11 modules (cards grid, hover effects)
+- Quick-stats row (placeholder zeros until data exists)
+
+#### [NEW] `src/components/ui/` — Shared UI primitives
+- `Button.tsx` — variants: primary, secondary, ghost, danger
+- `Card.tsx` — glass-morphism card with hover lift
+- `Navbar.tsx` — landing nav + dashboard sidebar nav
+
+---
+
+## Design System
+
+- **Color palette**: Dark navy base (`#0a0f1e`), electric violet accent (`#7c3aed`),
+  cyan highlights (`#06b6d4`), gradient from violet→cyan
+- **Typography**: Inter (Google Fonts)
+- **Effects**: glassmorphism cards, animated gradient text, floating blob backgrounds,
+  smooth page transitions (Framer Motion)
+- **Responsive**: mobile-first, hamburger menu on small screens
+
+---
+
+## Verification Plan
+
+### Browser Subagent Tests (after build)
+1. Open `http://localhost:3000` → Landing page renders with animations
+2. Click "Get Started" → redirects to `/sign-up` → Clerk sign-up form shows
+3. Sign up → redirected to `/dashboard`
+4. `/dashboard` shows greeting with username
+5. Sign out → redirected back to landing
+6. Try to navigate to `/dashboard` without auth → redirected to `/sign-in`
+
+### Build Check
+- `npm run build` passes without errors before handing off

@@ -1,0 +1,36 @@
+# Phase 1: User Authentication & Onboarding
+
+Implement user authentication using Clerk and sync user data to the Supabase `users` table.
+
+## Proposed Changes
+
+### 1. Clerk Authentication
+- Clerk handles Sign Up, Login, Forgot Password, and Email Verification out of the box via the existing `/sign-in` and `/sign-up` routes.
+- Social login (Google) must be enabled in your Clerk Dashboard (we cannot configure this via code).
+
+### 2. Onboarding Flow (`/onboarding`)
+- **[NEW]** `src/app/onboarding/page.tsx`: A short form presented immediately after the first login to collect `college` and `branch`.
+- **[NEW]** `src/actions/user.ts`: A Next.js Server Action that receives the onboarding data and inserts the new user row into the Supabase `users` table.
+
+### 3. Route Protection & Redirects
+- **[MODIFY]** `src/middleware.ts`: Ensure `/onboarding` is protected.
+- **[MODIFY]** `src/app/dashboard/layout.tsx`: Refactor into a Server Component. It will check if the logged-in Clerk user exists in the Supabase `users` table. If they do not exist, it will redirect them to `/onboarding`.
+- **[NEW]** `src/components/DashboardSidebar.tsx`: Extract the interactive client-side sidebar from the current `layout.tsx` so the layout itself can run on the server.
+
+---
+
+> [!WARNING]
+> ## Open Question: Supabase RLS Violation
+> The Supabase schema you ran includes the following Row Level Security (RLS) policy:
+> ```sql
+> CREATE POLICY "Users: own data only" ON users
+>   FOR ALL USING (clerk_id = current_setting('app.clerk_id', true));
+> ```
+> This policy relies on a custom Postgres setting (`app.clerk_id`). Since we are currently using the `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, any attempt to insert a user from our backend will fail with an **RLS violation** because this setting is null.
+> 
+> **How would you like to proceed?**
+> 1. **(Recommended)** Provide your **Supabase Service Role Key** (found in Supabase Dashboard -> Project Settings -> API). We can store it as `SUPABASE_SERVICE_ROLE_KEY` in `.env.local`. This allows our secure backend Server Actions to bypass RLS and create the user.
+> 2. Disable RLS on the `users` table temporarily.
+> 3. Add an RPC function in Supabase to set the `app.clerk_id` setting.
+
+Please let me know how you'd like to handle the Supabase RLS issue, and if you approve this implementation plan!
