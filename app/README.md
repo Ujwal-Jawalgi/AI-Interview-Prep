@@ -2,7 +2,7 @@
 
 An AI-powered mock interview and resume analysis platform that helps students and job seekers prepare for placements. Unlike static question-bank sites, it runs real interactive interviews, evaluates answers in real time, analyzes resumes for ATS compatibility, and tracks improvement over time.
 
-**Live demo:** _https://ai-interview-arun-khajapure.vercel.app/_
+**Live demo:** https://ai-interview-arun-khajapure.vercel.app/
 
 ---
 
@@ -130,8 +130,8 @@ User → Next.js Frontend → Next.js API Routes (serverless)
 
 ## Author
 
-**Ujwal Jawalgi**
-Chair, IEEE EMBS Student Branch Chapter, BMSIT
+**Ujwal U**
+Chair, IEEE EMBS Student Branch Chapter,
 B.Tech CSE, BMS Institute of Technology & Management
 
 ---
