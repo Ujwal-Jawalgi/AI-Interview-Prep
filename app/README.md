@@ -2,7 +2,7 @@
 
 An AI-powered mock interview and resume analysis platform that helps students and job seekers prepare for placements. Unlike static question-bank sites, it runs real interactive interviews, evaluates answers in real time, analyzes resumes for ATS compatibility, and tracks improvement over time.
 
-**Live demo:** _add your Vercel URL here once deployed_
+**Live demo:** _https://ai-interview-arun-khajapure.vercel.app/_
 
 ---
 
