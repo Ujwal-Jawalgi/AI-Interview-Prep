@@ -1,34 +1,175 @@
+# 🎯 AI Interview Preparation Platform
+
+An AI-powered interview preparation platform that helps students and job seekers practice interviews, improve resumes, and receive personalized feedback before facing real recruiters.
+
+🌐 **Live Demo:** https://ai-interview-arun-khajapure.vercel.app/
+
+---
+
+# 📖 Overview
+
+Preparing for technical interviews isn't just about solving coding problems.
+
+Many candidates struggle because they:
+
+- Never experience a realistic interview environment
+- Receive no feedback on communication or confidence
+- Don't know whether their resume can pass ATS screening
+- Practice from static question banks with no evaluation
+
+This platform provides an interactive AI-powered interview experience that simulates real interviews, evaluates responses, analyzes resumes, and tracks improvement over time.
+
+---
+
+# ✨ Features
+
+## 📄 Resume Analyzer
+
+- Upload PDF resumes
+- ATS compatibility score
+- Missing keyword detection
+- AI-generated resume improvement suggestions
+
+---
+
+## 🤖 AI Mock Interviews
+
+Practice different interview types:
+
+- HR Interviews
+- Technical Interviews
+- Behavioral Interviews
+- Aptitude Interviews
+- Coding Interviews
+
+Difficulty Levels:
+
+- Beginner
+- Intermediate
+- Advanced
+
+---
+
+## 🎤 Voice Interviews
+
+- Speak instead of typing
+- Browser speech recognition
+- Real interview-like conversation
+
+---
+
+## 💻 Coding Round
+
+- Built-in online code editor
+- Supports:
+  - C
+  - C++
+  - Java
+  - Python
+  - JavaScript
+- Code execution
+- AI code review
+
+---
+
+## 🏢 Company-Specific Interviews
+
+Practice interview styles inspired by companies like:
+
+- Google
+- Amazon
+- Microsoft
+- Adobe
+- Infosys
+
+---
+
+## 📊 AI Evaluation
+
+Each answer is evaluated based on:
+
+- Communication
+- Confidence
+- Grammar
+- Technical Accuracy
+- Problem Solving
+
+---
+
+## 📈 Progress Dashboard
+
+Track your growth with:
+
+- Performance trends
+- Skill improvement charts
+- Historical interview scores
+
+---
+
+## 📝 Feedback Reports
+
+After every interview receive:
+
+- Strengths
+- Weaknesses
+- Suggested improvements
+- Recommended study topics
+
+---
+
+## 🚀 AI Career Recommendations
+
+Get personalized suggestions for:
+
+- Suitable career roles
+- Skills to learn next
+- Improvement roadmap
+
+---
+
+# 🛠️ Tech Stack
+
+### Frontend
+
+- Next.js
+- React
+- Tailwind CSS
+
+### Backend
+
+- Supabase (PostgreSQL)
+- Clerk Authentication
+- Groq API
+
+### AI & Browser APIs
+
+- Web Speech API
+
+### Charts & Visualization
+
+- Chart.js
+
+### Deployment
+
+- Vercel
 
 
-Readme root · MD
-AI Interview Preparation Platform
-An AI-powered mock interview and resume analysis platform built to help students and job seekers walk into real interviews with confidence.
+# 🎯 Target Users
 
-Live demo: https://ai-interview-arun-khajapure.vercel.app/
+- College students
+- Placement aspirants
+- Software engineering candidates
+- Career switchers
+- Job seekers preparing for interviews
 
-The Problem
-Most students preparing for placements run into the same walls:
+---
 
-They've never experienced how a real interview actually flows
-They get no feedback on how they're communicating, only whether their code compiles
-They don't know if their resume will even survive an ATS filter before a human sees it
-Existing "interview prep" sites are just static question banks — read a question, read a model answer, move on. No interaction, no evaluation, no sense of where you actually stand.
-The result: people show up to real interviews under-practiced on the parts that are hardest to self-assess — communication, confidence, and structured thinking under pressure.
+# 🌟 Key Highlights
 
-The Solution
-This platform replaces static prep with an interactive one. It runs full mock interviews with an AI interviewer, scores your actual answers instead of just showing you a model one, analyzes your resume the way an ATS would, and tracks how you're improving across sessions — so by the time you're in a real interview room, you've already been in one before.
-
-What It Does
-Resume Analyzer	Upload a PDF, get an ATS-style score, keyword gaps, and AI-written improvement feedback
-AI Mock Interviews	Choose HR, Technical, Behavioral, Aptitude, or Coding — at Beginner, Intermediate, or Advanced difficulty
-Voice Interviews	Answer out loud instead of typing, using the browser's built-in speech recognition
-Coding Round	A real in-browser code editor (C, C++, Java, Python, JS) that actually runs your code, plus AI code review
-Company-Specific Practice	Interview styles modeled on how Google, Amazon, Microsoft, Infosys, and Adobe actually interview
-AI Evaluation	Every answer scored on communication, confidence, grammar, technical accuracy, and problem-solving
-Feedback Reports	Strengths, weaknesses, and what to study next — after every session, not just at the end
-Progress Dashboard	Charts tracking score trends and skill growth over time, so improvement is visible, not assumed
-AI Career Recommendations	Suggested roles and skills to focus on next, based on actual performance data
-Built With
-Next.js · Tailwind CSS · Supabase (PostgreSQL) · Clerk · Groq API · Web Speech API · Chart.js · Vercel
-
-For setup instructions and environment variables, see the app-level README (or wherever your dev-setup README lives).
+- AI-powered interview simulation
+- ATS resume analysis
+- Voice-based interviews
+- Coding assessment
+- Company-specific interview preparation
+- Personalized AI feedback
+- Progress tracking dashboard
