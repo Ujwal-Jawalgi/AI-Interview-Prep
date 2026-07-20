@@ -59,7 +59,7 @@ export default function InterviewConfigPage() {
     try {
       const interviewId = await startInterview(type, difficulty, company);
       router.push(`/dashboard/interview/${interviewId}`);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || "Failed to start interview.");
       setIsLoading(false);
@@ -84,11 +84,10 @@ export default function InterviewConfigPage() {
                   key={t.id}
                   type="button"
                   onClick={() => setType(t.id)}
-                  className={`flex flex-col items-center justify-center p-4 rounded-xl border transition-all ${
-                    type === t.id
-                      ? "border-violet-500 bg-violet-500/10 text-white"
-                      : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700 hover:bg-slate-800"
-                  }`}
+                  className={`flex flex-col items-center justify-center p-4 rounded-xl border transition-all ${type === t.id
+                    ? "border-violet-500 bg-violet-500/10 text-white"
+                    : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700 hover:bg-slate-800"
+                    }`}
                 >
                   <t.icon className="w-6 h-6 mb-2" />
                   <span className="text-sm font-medium">{t.label}</span>
@@ -106,11 +105,10 @@ export default function InterviewConfigPage() {
                   key={d}
                   type="button"
                   onClick={() => setDifficulty(d)}
-                  className={`p-3 rounded-xl border transition-all text-sm font-medium ${
-                    difficulty === d
-                      ? "border-violet-500 bg-violet-500/10 text-white"
-                      : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700 hover:bg-slate-800"
-                  }`}
+                  className={`p-3 rounded-xl border transition-all text-sm font-medium ${difficulty === d
+                    ? "border-violet-500 bg-violet-500/10 text-white"
+                    : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700 hover:bg-slate-800"
+                    }`}
                 >
                   {d}
                 </button>

@@ -34,50 +34,84 @@ export default function ActiveInterviewPage({ params }: { params: { id: string }
   // Voice mode states
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [voiceError, setVoiceError] = useState("");
   const [speechSupported, setSpeechSupported] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
+  // Accumulates confirmed final segments between onresult calls
+  const finalTranscriptRef = useRef("");
 
+  // Create the recognition instance ONCE on mount (empty dep array).
+  // Using refs inside handlers avoids stale closure bugs.
   useEffect(() => {
-    // Check Speech Recognition Support
-    if (typeof window !== "undefined") {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        setSpeechSupported(false);
-      } else {
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = "en-US";
+    if (typeof window === "undefined") return;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        recognition.onresult = (event: any) => {
-          if (!isListening) return;
-          let finalTranscript = "";
-          for (let i = 0; i < event.results.length; ++i) {
-            finalTranscript += event.results[i][0].transcript;
-          }
-          setAnswer(finalTranscript);
-        };
+    // Prefer the standard API, fall back to webkit prefix (required for Chrome)
+    const SpeechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        recognition.onerror = (event: any) => {
-          console.error("Speech recognition error", event.error);
-          setIsListening(false);
-          if (event.error === 'not-allowed') {
-            setError("Microphone access denied. Please allow microphone permissions.");
-            setIsVoiceMode(false);
-          }
-        };
-
-        recognition.onend = () => {
-          setIsListening(false);
-        };
-
-        recognitionRef.current = recognition;
-      }
+    if (!SpeechRecognitionAPI) {
+      setSpeechSupported(false);
+      return;
     }
-  }, [isListening]);
+
+    const recognition = new SpeechRecognitionAPI();
+    recognition.continuous = true;      // keep mic open between pauses
+    recognition.interimResults = true;  // show words as they are spoken
+    recognition.lang = "en-US";
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (event: any) => {
+      // Build transcript from the latest batch only.
+      // event.resultIndex marks where new results start this call.
+      // Final results are appended to our persistent ref;
+      // interim results are shown live but not persisted yet.
+      let interimTranscript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscriptRef.current += transcript + " ";
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+      // Update the answer field: committed finals + live interim preview
+      setAnswer(finalTranscriptRef.current + interimTranscript);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+      setIsListening(false);
+      // Surface ALL errors visibly instead of swallowing them
+      const errorMessages: Record<string, string> = {
+        "not-allowed":    "Microphone access denied. Click the 🔒 icon in the address bar and allow microphone access, then refresh.",
+        "no-speech":      "No speech detected. Make sure your microphone is working and try again.",
+        "audio-capture":  "No microphone found. Please connect a microphone and try again.",
+        "network":        "Speech recognition requires an internet connection.",
+        "aborted":        "Microphone was interrupted. Click the mic button to try again.",
+        "service-not-allowed": "Speech service blocked. Ensure the page is served over HTTPS or localhost.",
+      };
+      const msg = errorMessages[event.error] ||
+        `Speech recognition error: ${event.error}. Please try again.`;
+      setVoiceError(msg);
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        setIsVoiceMode(false);
+      }
+    };
+
+    recognition.onend = () => {
+      // Only mark as not-listening; don't auto-restart (user controls it)
+      setIsListening(false);
+    };
+
+    recognitionRef.current = recognition;
+
+    return () => {
+      try { recognition.stop(); } catch { /* ignore */ }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // <-- empty dep array: create once, never recreate
 
   // Initial load: get first question
   useEffect(() => {
@@ -110,8 +144,10 @@ export default function ActiveInterviewPage({ params }: { params: { id: string }
   const fetchNextQuestion = async () => {
     setIsGenerating(true);
     setError("");
+    setVoiceError("");
     setFeedback(null);
     setAnswer("");
+    finalTranscriptRef.current = ""; // reset accumulated transcript for new question
     if (recognitionRef.current && isListening) {
       try { recognitionRef.current.stop(); } catch { /* ignore */ }
       setIsListening(false);
@@ -136,18 +172,25 @@ export default function ActiveInterviewPage({ params }: { params: { id: string }
   };
 
   const toggleListening = () => {
-    if (!recognitionRef.current) return;
-    
+    if (!recognitionRef.current) {
+      setVoiceError("Speech recognition not available. Please use Chrome or Edge.");
+      return;
+    }
+    setVoiceError("");
+
     if (isListening) {
       try { recognitionRef.current.stop(); } catch { /* ignore */ }
       setIsListening(false);
     } else {
-      setAnswer(""); // Clear previous answer when starting new speech recording
+      // Reset accumulated transcript so we start fresh for this mic session
+      finalTranscriptRef.current = "";
+      setAnswer("");
       try {
         recognitionRef.current.start();
         setIsListening(true);
       } catch (err) {
-        console.error("Failed to start listening", err);
+        console.error("Failed to start recognition:", err);
+        setVoiceError("Could not start microphone. Try clicking the mic button again.");
       }
     }
   };
@@ -298,9 +341,10 @@ export default function ActiveInterviewPage({ params }: { params: { id: string }
             {!feedback && (
               <Card className="p-4 bg-slate-900/30 border-slate-800">
                 {isVoiceMode && (
-                  <div className="flex justify-center mb-6 mt-4">
+                  <div className="flex flex-col items-center mb-6 mt-4 gap-3">
                     <button
                       onClick={toggleListening}
+                      title={isListening ? "Click to stop" : "Click to start speaking"}
                       className={`relative flex items-center justify-center w-20 h-20 rounded-full transition-all duration-300 ${
                         isListening 
                           ? "bg-red-500/20 text-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)] border border-red-500/50" 
@@ -316,18 +360,34 @@ export default function ActiveInterviewPage({ params }: { params: { id: string }
                         <MicOff className="w-8 h-8" />
                       )}
                     </button>
+                    <p className="text-xs text-slate-500">
+                      {isListening
+                        ? "🔴 Listening — speak now, then click again to stop"
+                        : "Click to start speaking"}
+                    </p>
+                    {/* Voice-specific error — shown under the mic button */}
+                    {voiceError && (
+                      <div className="w-full max-w-sm px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs text-center">
+                        {voiceError}
+                      </div>
+                    )}
                   </div>
                 )}
 
                 <textarea
                   value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
+                  onChange={(e) => {
+                    setAnswer(e.target.value);
+                    // If user edits manually, sync the finalTranscriptRef so
+                    // subsequent speech continues from where the user left off
+                    finalTranscriptRef.current = e.target.value;
+                  }}
                   placeholder={
                     isVoiceMode && isListening 
-                      ? "Listening... Speak now." 
+                      ? "Listening… speak your answer" 
                       : isVoiceMode 
-                        ? "Click the microphone above to start speaking, or type your answer here..."
-                        : "Type your answer here..."
+                        ? "Click the microphone above to start speaking, or type your answer here…"
+                        : "Type your answer here…"
                   }
                   className="w-full h-40 bg-transparent text-white placeholder:text-slate-600 focus:outline-none resize-none p-2"
                   disabled={isSubmitting}

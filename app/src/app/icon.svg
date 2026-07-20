@@ -1,0 +1,19 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#8b5cf6"/>
+<stop offset="100%" stop-color="#3b82f6"/>
+</linearGradient>
+</defs>
+<rect x="0" y="0" width="120" height="120" rx="28" fill="url(#g1)"/>
+<path d="M60 26 C40 26 28 40 30 56 C20 60 16 74 24 84 C22 96 32 104 44 102 C48 108 56 110 62 106 C68 110 78 108 82 100 C94 100 100 90 96 80 C104 72 100 58 90 54 C90 42 78 30 64 32 C63 29 62 27 60 26 Z" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="46" cy="58" r="4" fill="#ffffff"/>
+<circle cx="64" cy="48" r="4" fill="#ffffff"/>
+<circle cx="76" cy="66" r="4" fill="#ffffff"/>
+<circle cx="58" cy="80" r="4" fill="#ffffff"/>
+<line x1="46" y1="58" x2="64" y2="48" stroke="#ffffff" stroke-width="2"/>
+<line x1="64" y1="48" x2="76" y2="66" stroke="#ffffff" stroke-width="2"/>
+<line x1="76" y1="66" x2="58" y2="80" stroke="#ffffff" stroke-width="2"/>
+<line x1="58" y1="80" x2="46" y2="58" stroke="#ffffff" stroke-width="2"/>
+<path d="M64 48 L88 20 L78 40 L92 34 L64 48 Z" fill="#facc15"/>
+</svg>

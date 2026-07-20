@@ -1,5 +1,5 @@
 -- ============================================================
--- InterviewAI — Supabase Postgres Schema
+-- PrepMind — Supabase Postgres Schema
 -- Run this in Supabase Dashboard → SQL Editor → New Query
 -- ============================================================
 

@@ -6,6 +6,7 @@ import { completeOnboarding } from "@/actions/user";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import { Zap, GraduationCap, BookOpen, Loader2 } from "lucide-react";
+import Image from "next/image";
 
 export default function OnboardingPage() {
   const [loading, setLoading] = useState(false);
@@ -21,10 +22,14 @@ export default function OnboardingPage() {
       {/* Header */}
       <header className="relative z-10 px-6 py-4 flex items-center justify-between border-b border-white/[0.06] bg-[#070d1c]/80 backdrop-blur-md">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" fill="white" />
-          </div>
-          <span className="font-bold gradient-text text-lg">InterviewAI</span>
+          <Image 
+            src="/logo.svg" 
+            alt="PrepMind" 
+            width={32} 
+            height={32} 
+            className="w-8 h-8 rounded-lg shadow-lg shadow-violet-500/30"
+          />
+          <span className="font-bold gradient-text text-lg">PrepMind</span>
         </div>
         <UserButton afterSignOutUrl="/" />
       </header>

@@ -8,6 +8,7 @@ import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import { Menu, X, Zap } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const navLinks = [
   { href: "#features", label: "Features" },
@@ -42,13 +43,11 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/50 transition-shadow">
-              <Zap className="w-4 h-4 text-white" fill="white" />
-            </div>
-            <span className="text-lg font-bold gradient-text">InterviewAI</span>
-          </Link>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-sm font-medium">
+            <Zap className="w-3.5 h-3.5" fill="currentColor" />
+            Powered by Groq AI
+          </div>
 
           {/* Desktop Nav Links (landing only) */}
           {isLanding && (
@@ -87,7 +86,7 @@ export default function Navbar() {
                   <Button variant="ghost" size="sm">Sign In</Button>
                 </SignInButton>
                 <SignUpButton mode="modal">
-                  <Button variant="primary" size="sm">Get Started Free</Button>
+                  <Button variant="primary" size="sm">Sign Up</Button>
                 </SignUpButton>
               </>
             )}

@@ -22,6 +22,8 @@ import {
   Menu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import AppFooter from "@/components/AppFooter";
+import Image from "next/image";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -36,22 +38,26 @@ const navItems = [
   { href: "/dashboard/career", icon: Lightbulb, label: "Career Advice" },
 ];
 
-function SidebarContent({ 
-  collapsed, 
-  pathname, 
-  setMobileOpen 
-}: { 
-  collapsed: boolean; 
-  pathname: string; 
-  setMobileOpen: (open: boolean) => void 
+function SidebarContent({
+  collapsed,
+  pathname,
+  setMobileOpen
+}: {
+  collapsed: boolean;
+  pathname: string;
+  setMobileOpen: (open: boolean) => void
 }) {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       {/* Logo */}
       <div className={cn("flex items-center gap-3 px-4 py-5 border-b border-white/[0.06]", collapsed && "justify-center")}>
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-violet-500/30 flex-shrink-0">
-          <Zap className="w-4 h-4 text-white" fill="white" />
-        </div>
+        <Image 
+          src="/logo.svg" 
+          alt="PrepMind" 
+          width={32} 
+          height={32} 
+          className="w-8 h-8 rounded-lg shadow-lg shadow-violet-500/30 flex-shrink-0"
+        />
         <AnimatePresence>
           {!collapsed && (
             <motion.span
@@ -61,7 +67,7 @@ function SidebarContent({
               exit={{ opacity: 0, width: 0 }}
               className="font-bold gradient-text text-base overflow-hidden whitespace-nowrap"
             >
-              InterviewAI
+              PrepMind
             </motion.span>
           )}
         </AnimatePresence>
@@ -134,8 +140,8 @@ function SidebarContent({
               exit={{ opacity: 0 }}
               className="overflow-hidden"
             >
-              <p className="text-xs text-slate-500">Signed in as</p>
-              <p className="text-sm font-medium text-white">Your Account</p>
+              <p className="text-xs text-slate-500"></p>
+              <p className="text-sm font-medium text-white"> </p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -155,7 +161,7 @@ export default function DashboardSidebar({ children }: { children: React.ReactNo
       <motion.aside
         animate={{ width: collapsed ? 72 : 240 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="hidden md:flex flex-col relative bg-[#070d1c] border-r border-white/[0.06] flex-shrink-0 overflow-hidden"
+        className="hidden md:flex flex-col relative bg-[#070d1c] border-r border-white/[0.06] flex-shrink-0"
       >
         <SidebarContent collapsed={collapsed} pathname={pathname} setMobileOpen={setMobileOpen} />
 
@@ -209,17 +215,24 @@ export default function DashboardSidebar({ children }: { children: React.ReactNo
             <Menu className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center">
-              <Zap className="w-3 h-3 text-white" fill="white" />
-            </div>
-            <span className="font-bold gradient-text text-sm">InterviewAI</span>
+            <Image 
+              src="/logo.svg" 
+              alt="PrepMind" 
+              width={24} 
+              height={24} 
+              className="w-6 h-6 rounded-lg"
+            />
+            <span className="font-bold gradient-text text-sm">PrepMind</span>
           </div>
           <UserButton afterSignOutUrl="/" />
         </div>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto bg-[#050818]">
-          {children}
+        <main className="flex-1 overflow-y-auto bg-[#050818] flex flex-col">
+          <div className="flex-1">
+            {children}
+          </div>
+          <AppFooter />
         </main>
       </div>
     </div>

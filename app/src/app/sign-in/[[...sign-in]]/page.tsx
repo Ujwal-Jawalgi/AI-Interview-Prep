@@ -1,6 +1,9 @@
 import { SignIn } from "@clerk/nextjs";
 import { Zap } from "lucide-react";
 import Link from "next/link";
+import { clerkAppearance } from "@/lib/clerkAppearance";
+import AppFooter from "@/components/AppFooter";
+import Image from "next/image";
 
 export default function SignInPage() {
   return (
@@ -19,28 +22,23 @@ export default function SignInPage() {
 
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 mb-8 group">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-violet-500/40 group-hover:shadow-violet-500/60 transition-shadow">
-          <Zap className="w-5 h-5 text-white" fill="white" />
-        </div>
-        <span className="text-xl font-bold gradient-text">InterviewAI</span>
+        <Image
+          src="/logo.svg"
+          alt="PrepMind"
+          width={36}
+          height={36}
+          className="w-9 h-9 rounded-xl shadow-lg shadow-violet-500/40 group-hover:shadow-violet-500/60 transition-shadow"
+        />
+        <span className="text-xl font-bold gradient-text">PrepMind</span>
       </Link>
 
       {/* Clerk SignIn component */}
       <div className="w-full max-w-md">
-        <SignIn
-          appearance={{
-            variables: {
-              colorPrimary: "#7c3aed",
-              colorBackground: "#0a0f1e",
-              colorText: "#f8fafc",
-              colorTextSecondary: "#94a3b8",
-              colorInputBackground: "rgba(255,255,255,0.05)",
-              colorInputText: "#f8fafc",
-              borderRadius: "12px",
-            },
-          }}
-        />
+        <SignIn appearance={clerkAppearance} />
       </div>
+
+      <AppFooter />
     </main>
   );
 }
+

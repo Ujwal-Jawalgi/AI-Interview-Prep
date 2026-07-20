@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Brain,
   FileText,
@@ -19,7 +21,8 @@ import {
 import Navbar from "@/components/Navbar";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { SignUpButton } from "@clerk/nextjs";
+import { SignUpButton, useUser, useClerk } from "@clerk/nextjs";
+import AppFooter from "@/components/AppFooter";
 
 /* ─── Data ─────────────────────────────────────────────────── */
 const features = [
@@ -30,6 +33,7 @@ const features = [
     color: "from-violet-500 to-purple-600",
     glow: "shadow-violet-500/20",
     delay: "0ms",
+    route: "/dashboard/interview",
   },
   {
     icon: FileText,
@@ -38,6 +42,7 @@ const features = [
     color: "from-cyan-500 to-blue-600",
     glow: "shadow-cyan-500/20",
     delay: "80ms",
+    route: "/dashboard/resume",
   },
   {
     icon: Code2,
@@ -46,6 +51,7 @@ const features = [
     color: "from-emerald-500 to-teal-600",
     glow: "shadow-emerald-500/20",
     delay: "160ms",
+    route: "/dashboard/coding",
   },
   {
     icon: Mic,
@@ -54,6 +60,7 @@ const features = [
     color: "from-pink-500 to-rose-600",
     glow: "shadow-pink-500/20",
     delay: "240ms",
+    route: "/dashboard/voice",
   },
   {
     icon: Building2,
@@ -62,6 +69,7 @@ const features = [
     color: "from-orange-500 to-amber-600",
     glow: "shadow-orange-500/20",
     delay: "320ms",
+    route: "/dashboard/companies",
   },
   {
     icon: TrendingUp,
@@ -70,6 +78,7 @@ const features = [
     color: "from-indigo-500 to-violet-600",
     glow: "shadow-indigo-500/20",
     delay: "400ms",
+    route: "/dashboard/progress",
   },
 ];
 
@@ -102,17 +111,17 @@ const steps = [
 ];
 
 const stats = [
-  { label: "Mock Interviews", value: "50K+", icon: Brain },
-  { label: "Students Helped", value: "12K+", icon: Users },
-  { label: "Companies Covered", value: "50+", icon: Building2 },
-  { label: "Avg Score Improvement", value: "38%", icon: Trophy },
+  { label: "Mock Interviews", value: "5K+", icon: Brain },
+  { label: "Students Helped", value: "2K+", icon: Users },
+  { label: "Companies Covered", value: "15+", icon: Building2 },
+  { label: "Avg Score Improvement", value: "68%", icon: Trophy },
 ];
 
 const testimonials = [
   {
     name: "Priya Sharma",
     role: "SDE @ Amazon",
-    text: "InterviewAI's mock interviews felt so real. I practiced 30+ sessions and got my dream offer in 6 weeks!",
+    text: "PrepMind's mock interviews felt so real. I practiced 30+ sessions and got my dream offer in 6 weeks!",
     rating: 5,
   },
   {
@@ -131,6 +140,18 @@ const testimonials = [
 
 /* ─── Component ────────────────────────────────────────────── */
 export default function LandingPage() {
+  const router = useRouter();
+  const { isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
+
+  const handleFeatureClick = (route: string) => {
+    if (isSignedIn) {
+      router.push(route);
+    } else {
+      openSignIn({ afterSignInUrl: route, afterSignUpUrl: route });
+    }
+  };
+
   return (
     <main className="relative min-h-screen overflow-hidden">
       <Navbar />
@@ -153,13 +174,19 @@ export default function LandingPage() {
 
       {/* ── HERO ── */}
       <section className="relative pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-        {/* Badge */}
+        {/* Hero Logo */}
         <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-sm font-medium mb-8 animate-fade-in-up"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 animate-fade-in-up"
           style={{ animationDelay: "0ms", animationFillMode: "both" }}
         >
-          <Zap className="w-3.5 h-3.5" fill="currentColor" />
-          Powered by Groq AI — Blazing Fast Responses
+          <Image 
+            src="/logo.svg" 
+            alt="PrepMind Logo" 
+            width={100} 
+            height={100} 
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl shadow-2xl shadow-violet-500/40"
+          />
+          <span className="text-6xl sm:text-7xl lg:text-8xl font-black gradient-text tracking-tight">PrepMind</span>
         </div>
 
         {/* Headline */}
@@ -178,7 +205,7 @@ export default function LandingPage() {
           style={{ animationDelay: "200ms", animationFillMode: "both" }}
         >
           AI mock interviews, resume analysis, coding rounds, voice practice, and
-          company-specific prep — all in one platform. From campus to career.
+          company-specific prep - all in one platform. From campus to career.
         </p>
 
         {/* CTA Buttons */}
@@ -186,12 +213,19 @@ export default function LandingPage() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up"
           style={{ animationDelay: "300ms", animationFillMode: "both" }}
         >
-          <SignUpButton mode="modal">
-            <Button variant="primary" size="lg" className="w-full sm:w-auto">
-              Start Practicing Free
+          {isSignedIn ? (
+            <Button onClick={() => router.push("/dashboard")} variant="primary" size="lg" className="w-full sm:w-auto">
+              Start Practicing
               <ArrowRight className="w-5 h-5" />
             </Button>
-          </SignUpButton>
+          ) : (
+            <SignUpButton mode="modal">
+              <Button variant="primary" size="lg" className="w-full sm:w-auto">
+                Start Practicing
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </SignUpButton>
+          )}
           <Link href="#features">
             <Button variant="secondary" size="lg" className="w-full sm:w-auto">
               See All Features
@@ -204,7 +238,7 @@ export default function LandingPage() {
           className="flex items-center justify-center gap-6 mt-10 text-sm text-slate-500 animate-fade-in-up"
           style={{ animationDelay: "400ms", animationFillMode: "both" }}
         >
-          {["No credit card", "Free to start", "50+ companies"].map((t) => (
+          {["Free Practice", "Instant Feedback", "Zero Pressure"].map((t) => (
             <span key={t} className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-500" />
               {t}
@@ -256,7 +290,14 @@ export default function LandingPage() {
               <Card
                 variant="glass"
                 hover
-                className={`p-6 h-full cursor-pointer group shadow-xl ${f.glow}`}
+                className={`p-6 h-full cursor-pointer group shadow-xl ${f.glow} transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]`}
+                onClick={() => handleFeatureClick(f.route)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") handleFeatureClick(f.route);
+                }}
+                aria-label={`Go to ${f.title}`}
               >
                 <div
                   className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}
@@ -266,7 +307,7 @@ export default function LandingPage() {
                 <h3 className="text-lg font-bold text-white mb-2">{f.title}</h3>
                 <p className="text-slate-400 text-sm leading-relaxed">{f.desc}</p>
                 <div className="mt-4 flex items-center gap-1 text-violet-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  Learn more <ChevronRight className="w-4 h-4" />
+                  Explore <ChevronRight className="w-4 h-4" />
                 </div>
               </Card>
             </div>
@@ -381,30 +422,27 @@ export default function LandingPage() {
               <span className="gradient-text">Dream Job?</span>
             </h2>
             <p className="text-slate-400 text-lg mb-8">
-              Join 12,000+ students already preparing smarter with InterviewAI.
+              Join 12,000+ students already preparing smarter with PrepMind.
             </p>
-            <SignUpButton mode="modal">
-              <Button variant="primary" size="lg">
-                Start for Free Today
+            {isSignedIn ? (
+              <Button onClick={() => router.push("/dashboard")} variant="primary" size="lg">
+                Go to Dashboard
                 <ArrowRight className="w-5 h-5" />
               </Button>
-            </SignUpButton>
+            ) : (
+              <SignUpButton mode="modal">
+                <Button variant="primary" size="lg">
+                  Start for Free Today
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </SignUpButton>
+            )}
           </Card>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="relative border-t border-white/[0.06] py-10 px-4 text-center">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center">
-            <Zap className="w-3 h-3 text-white" fill="white" />
-          </div>
-          <span className="font-bold gradient-text">InterviewAI</span>
-        </div>
-        <p className="text-slate-600 text-sm">
-          © 2025 InterviewAI. Built with Next.js, Groq AI & ❤️
-        </p>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

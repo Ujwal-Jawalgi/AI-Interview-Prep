@@ -117,13 +117,13 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <p className="text-slate-500 text-sm mb-1">
-              {greeting}, {data.firstName} 👋
+              Your Dashboard
             </p>
             <h1 className="text-3xl sm:text-4xl font-black text-white">
-              Your <span className="gradient-text">Dashboard</span>
+              {greeting} <span className="gradient-text">, {data.firstName}</span>👋
             </h1>
             <p className="text-slate-400 text-sm mt-2">
-              Here is your progress and upcoming schedule.
+              Here is your progress.
             </p>
           </div>
 
@@ -205,26 +205,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
         </motion.div>
 
         {/* ── Sidebar (Schedule) ── */}
-        <motion.div variants={fadeUp} custom={5} initial="hidden" animate="show" className="space-y-6">
-          <div>
-            <h2 className="text-lg font-bold text-white mb-4">Upcoming Schedule</h2>
-            <UpcomingSchedule />
-          </div>
 
-          <Card variant="gradient" glow className="p-6">
-            <h3 className="text-base font-bold text-white mb-2">
-              Ready for your next challenge?
-            </h3>
-            <p className="text-slate-400 text-sm mb-4">
-              AI evaluates your communication, technical skills, and grammar in real-time.
-            </p>
-            <Link href="/dashboard/interview">
-              <Button variant="primary" className="w-full">
-                Practice Now <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          </Card>
-        </motion.div>
       </div>
 
       {/* ── Modules Grid ── */}
