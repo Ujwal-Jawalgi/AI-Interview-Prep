@@ -5,7 +5,7 @@ import { UserButton } from "@clerk/nextjs";
 import { completeOnboarding } from "@/actions/user";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { Zap, GraduationCap, BookOpen, Loader2 } from "lucide-react";
+import { GraduationCap, BookOpen, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 export default function OnboardingPage() {

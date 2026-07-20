@@ -13,7 +13,7 @@ import {
   Star,
   ArrowRight,
   CheckCircle2,
-  Zap,
+
   Users,
   Trophy,
   ChevronRight,

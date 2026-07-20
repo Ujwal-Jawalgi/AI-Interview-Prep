@@ -18,7 +18,7 @@ import {
   Lightbulb,
   ChevronLeft,
   ChevronRight,
-  Zap,
+
   Menu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";

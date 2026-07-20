@@ -1,5 +1,5 @@
 import { SignUp } from "@clerk/nextjs";
-import { Zap } from "lucide-react";
+
 import Link from "next/link";
 import { clerkAppearance } from "@/lib/clerkAppearance";
 import AppFooter from "@/components/AppFooter";
