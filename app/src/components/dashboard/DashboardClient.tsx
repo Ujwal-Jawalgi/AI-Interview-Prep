@@ -12,13 +12,13 @@ import {
   Clock,
   Target,
   Zap,
-  ArrowRight,
+
   Activity,
 } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import ProgressChart from "./ProgressChart";
-import UpcomingSchedule from "./UpcomingSchedule";
+
 import CareerRecommendationModule from "./CareerRecommendationModule";
 import type { CareerRecommendation } from "@/lib/career/groq-career";
 

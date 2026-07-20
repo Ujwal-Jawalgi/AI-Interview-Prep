@@ -8,7 +8,7 @@ import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import { Menu, X, Zap } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+
 
 const navLinks = [
   { href: "#features", label: "Features" },
