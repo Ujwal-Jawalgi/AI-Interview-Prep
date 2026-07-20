@@ -1,4 +1,3 @@
-import type { Appearance } from "@clerk/nextjs/server";
 
 /**
  * Shared dark-theme appearance config for all Clerk components.
@@ -9,7 +8,7 @@ import type { Appearance } from "@clerk/nextjs/server";
  * `elements` targets specific rendered DOM elements for hard overrides
  * that tokens don't reliably reach (OTP boxes, Google button, etc.).
  */
-export const clerkAppearance: Appearance = {
+export const clerkAppearance = {
   variables: {
     colorPrimary: "#7c3aed",
     colorBackground: "#0d1224",
