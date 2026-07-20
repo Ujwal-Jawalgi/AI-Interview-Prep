@@ -83,8 +83,51 @@ const features = [
 ];
 
 const companies = [
-  "Google", "Amazon", "Microsoft", "Meta", "Adobe",
-  "Infosys", "TCS", "Accenture", "Wipro", "Cognizant",
+  {
+    name: "Google",
+    domain: "google.com",
+    desc: "Practice coding algorithms, system design, and the famous 'Googleyness' behavioral questions.",
+  },
+  {
+    name: "Amazon",
+    domain: "amazon.com",
+    desc: "Master the 14 Leadership Principles, behavioral scenarios, and bar-raiser technical rounds.",
+  },
+  {
+    name: "Microsoft",
+    domain: "microsoft.com",
+    desc: "Prepare for deep problem-solving, OOD, and testing rounds typical of Microsoft interviews.",
+  },
+  {
+    name: "Meta",
+    domain: "meta.com",
+    desc: "Focus on rapid coding, scalable system design, and behavioral fit for the hacker culture.",
+  },
+  {
+    name: "Adobe",
+    domain: "adobe.com",
+    desc: "Gear up for heavy data structures, core CS fundamentals, and operating systems questions.",
+  },
+  {
+    name: "Infosys",
+    domain: "infosys.com",
+    desc: "Get ready for aptitude, basic programming, and standard HR questions for mass recruitment.",
+  },
+  {
+    name: "TCS",
+    domain: "tcs.com",
+    desc: "Prepare for TCS Ninja and Digital profiles with logic, coding, and technical HR rounds.",
+  },
+  {
+    name: "Accenture",
+    domain: "accenture.com",
+    desc: "Practice cognitive assessments, technical fundamentals, and communication skills.",
+  },
+  {
+    name: "Wipro",
+    domain: "wipro.com",
+    desc: "Master logical reasoning, basic coding assessments, and typical behavioral interviews.",
+  },
 ];
 
 const steps = [
@@ -179,11 +222,11 @@ export default function LandingPage() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 animate-fade-in-up"
           style={{ animationDelay: "0ms", animationFillMode: "both" }}
         >
-          <Image 
-            src="/logo.svg" 
-            alt="PrepMind Logo" 
-            width={100} 
-            height={100} 
+          <Image
+            src="/logo.svg"
+            alt="PrepMind Logo"
+            width={100}
+            height={100}
             className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl shadow-2xl shadow-violet-500/40"
           />
           <span className="text-6xl sm:text-7xl lg:text-8xl font-black gradient-text tracking-tight">PrepMind</span>
@@ -327,14 +370,42 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {companies.map((company, i) => (
               <div
-                key={company}
-                className="px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300 text-sm font-medium hover:bg-violet-500/10 hover:border-violet-500/30 hover:text-violet-300 transition-all duration-200 cursor-pointer hover:scale-105 animate-fade-in-up"
-                style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
+                key={company.name}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${(i % 3) * 80}ms`, animationFillMode: "both" }}
               >
-                {company}
+                <Card
+                  variant="glass"
+                  hover
+                  className="p-6 h-full cursor-pointer group shadow-lg hover:bg-white/[0.03] transition-colors flex flex-col"
+                  onClick={() => handleFeatureClick("/dashboard/companies")}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") handleFeatureClick("/dashboard/companies");
+                  }}
+                  aria-label={`Prepare for ${company.name}`}
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md p-2 overflow-hidden">
+                      <img 
+                        src={`https://www.google.com/s2/favicons?sz=128&domain_url=${company.domain}`} 
+                        alt={`${company.name} logo`} 
+                        className="w-full h-full object-contain" 
+                      />
+                    </div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-violet-300 transition-colors">{company.name}</h3>
+                  </div>
+                  <p className="text-slate-400 text-sm leading-relaxed flex-1">
+                    {company.desc}
+                  </p>
+                  <div className="mt-5 flex items-center gap-1 text-violet-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    Explore <ChevronRight className="w-4 h-4" />
+                  </div>
+                </Card>
               </div>
             ))}
           </div>
@@ -422,7 +493,7 @@ export default function LandingPage() {
               <span className="gradient-text">Dream Job?</span>
             </h2>
             <p className="text-slate-400 text-lg mb-8">
-              Join 12,000+ students already preparing smarter with PrepMind.
+              Join 2,000+ students already preparing smarter with PrepMind.
             </p>
             {isSignedIn ? (
               <Button onClick={() => router.push("/dashboard")} variant="primary" size="lg">
