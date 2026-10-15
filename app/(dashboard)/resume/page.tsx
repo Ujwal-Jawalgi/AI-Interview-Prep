@@ -9,12 +9,6 @@ import { Progress } from "@/components/ui/progress";
 import { UploadCloud, FileText, CheckCircle2, AlertTriangle, ArrowRight, Star, X } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import * as pdfjsLib from "pdfjs-dist";
-
-// Setup PDF.js worker
-if (typeof window !== "undefined") {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-}
 
 interface ResumeAnalysis {
   overall_score: number;
@@ -72,13 +66,17 @@ export default function ResumePage() {
   };
 
   const extractTextFromPDF = async (pdfData: ArrayBuffer): Promise<string> => {
+    const pdfjsLib = await import("pdfjs-dist");
+    if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+    }
     const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
     let fullText = "";
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const pageText = textContent.items.map((item: any) => item.str).join(" ");
-      fullText += pageText + "n";
+      fullText += pageText + "\n";
     }
     return fullText;
   };
